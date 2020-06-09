@@ -1,5 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const pug = require("pug");
+
 console.log(__dirname);
 module.exports = {
     entry: __dirname + "/src/index.js",
@@ -9,21 +11,39 @@ module.exports = {
     },
     module: {
         rules: [
-            {
-                test: /\.m?js$/,
-                exclude: /node_modules/,
-                use: ['babel-loader'],
-                // options: {
-                //     presets: ['@babel/preset-env']
-                // }
 
+            {
+                test: /\.html$/,
+                use: "html-loader",
             },
             {
-                test: /\.htmls/,
-                use: "html-loader"
+                test: /\.css$/,
+                exclude: [/node_modules/],
+                use: ["style-loader", "postcss-loader", "css-loader"]
+            },
+            {
+                test: /\.(sass|scss)$/,
+                use: [
+                    {
+                        loader: "style-loader",
+                    },
+                    {
+                        loader: "css-loader",
+                    },
+                    {
+                        loader: "sass-loader",
+                    },
+                    {
+                        test: /\.pug$/,
+                        use: ["pug-loader"],
+                        exclude: [/node_modules/],
+                        pretty: true,
+                    },
+                ]
             }
         ]
     },
+
     plugins: [
         new HtmlWebpackPlugin(
             {
